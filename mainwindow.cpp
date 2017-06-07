@@ -19,12 +19,25 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->plot->addGraph();
     ui->plot->graph(0)->setScatterStyle(QCPScatterStyle::ssCircle);
     ui->plot->graph(0)->setLineStyle(QCPGraph::lsLine);
-    ui->plot->setBackground(QBrush(QColor(48,47,47)));
-    plot();
+    ui->plot->setBackground(QBrush(QColor(90,90,90)));
+    //plot();
 
     serial = new QSerialPort(this);
 //! [1]
     settings = new SettingsDialog;
+    ui->actionConnect->setEnabled(true);
+    ui->actionDisconnect->setEnabled(false);
+    ui->actionQuit->setEnabled(true);
+    ui->actionConfigure->setEnabled(true);
+
+    status = new QLabel;
+    ui->statusBar->addWidget(status);
+
+    initActionsConnections();
+
+    connect(serial, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error),
+            this, &MainWindow::handleError);
+
 }
 
 MainWindow::~MainWindow()
